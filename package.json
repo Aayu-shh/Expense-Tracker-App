@@ -1,0 +1,34 @@
+{
+  "name": "expense-tracker-app",
+  "version": "1.0.0",
+  "description": "A fullstack expense tracker app that will be deployed to my AWS server thus accessible to everyone.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Aayu-shh/Expense-Tracker-App.git"
+  },
+  "keywords": [
+    "AWS",
+    "Expense",
+    "MySQL",
+    "ExpressJs"
+  ],
+  "author": "Aayush Hacks",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Aayu-shh/Expense-Tracker-App/issues"
+  },
+  "homepage": "https://github.com/Aayu-shh/Expense-Tracker-App#readme",
+  "dependencies": {
+    "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "mysql2": "^3.5.2",
+    "nodemon": "^3.0.1",
+    "sequelize": "^6.32.1"
+  }
+}
