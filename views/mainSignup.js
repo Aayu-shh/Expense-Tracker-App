@@ -5,7 +5,7 @@ const myForm = document.querySelector('#myform')
 
 myForm.addEventListener('submit', (e) => {
     e.preventDefault();
-    const userObj = {
+    const newUserObj = {
         named: name.value,
         emailed: email.value,
         passed: pass.value
@@ -13,7 +13,7 @@ myForm.addEventListener('submit', (e) => {
     //console.log("the name is: "+name.value+",, And email is: "+email.value+";;\n Password is: "+pass.value);
     console.log(userObj);
     
-    axios.post('http://localhost:2000/user/signup', (userObj))
+    axios.post('http://localhost:2000/user/signup', (newUserObj))
         .then(resObj => console.log(resObj.data))
         .catch(err => console.log(err));
 });

@@ -13,10 +13,12 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/',(req,res,next)=>{
-    res.sendFile(__dirname + '/views/login.html')
+    res.sendFile(__dirname + '/views/signup.html')
 });
 
-app.post('/user/signup', userController.login);
+app.post('/user/signup', userController.signup);
+
+app.post('/user/login', userController.login);
 
 app.listen(2000, () => {
     db.sync()
