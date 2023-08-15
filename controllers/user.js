@@ -8,9 +8,9 @@ exports.signup = async (req, res) => {
     // console.log(name+" n "+password+" p "+email+" e ")
     try {
         const hash = await bcrypt.hash(password, 10);
-        const result = User.create({ Name: name, Email: email, Password: hash });
-        console.log(result.dataValues);
-        res.send(result);
+        const user = User.create({ Name: name, Email: email, Password: hash });
+        console.log(user.dataValues);
+        res.send(user);
     }
     catch (err) {
         res.send(err);
@@ -21,15 +21,15 @@ exports.login = async (req, res) => {
     const email = req.body.emailed;
     const password = req.body.passed;
     try {
-        const result = await User.findAll({
+        const user = await User.findAll({
             where: {
                 Email: email,
             }
         })
-        // console.log(result);
-        if (result.length)      //if len>0  =>  Email FOUND
+        // console.log(user);
+        if (user.length)      //if len>0  =>  Email FOUND
         {
-            const dbHash = result[0].dataValues.Password;
+            const dbHash = user[0].Password;
             console.log(dbHash + " ==> is the Password fetched From Database.");
             const isAuthorized = await bcrypt.compare(password, dbHash);
             if (isAuthorized) {
