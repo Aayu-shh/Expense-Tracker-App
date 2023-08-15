@@ -3,7 +3,7 @@ const email = document.querySelector('#email');
 const pass = document.querySelector('#pass');
 const myForm = document.querySelector('#myform')
 
-myForm.addEventListener('submit', (e) => {
+myForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const newUserObj = {
         named: name.value,
@@ -11,9 +11,15 @@ myForm.addEventListener('submit', (e) => {
         passed: pass.value
     }
     //console.log("the name is: "+name.value+",, And email is: "+email.value+";;\n Password is: "+pass.value);
-    console.log(userObj);
+    console.log(newUserObj);
     
-    axios.post('http://localhost:2000/user/signup', (newUserObj))
-        .then(resObj => console.log(resObj.data))
-        .catch(err => console.log(err));
+    try{
+    const resObj = await axios.post('http://localhost:2000/user/signup', (newUserObj))
+    console.log(resObj.data);
+    if(resObj.data.name != 'SequelizeUniqueConstraintError')
+        window.location.href = 'login.html';            //navigate to Login Page
+    }
+    catch(err){
+        console.log(err);
+    }
 });

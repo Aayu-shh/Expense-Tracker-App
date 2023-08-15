@@ -1,6 +1,7 @@
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const Express = require('express');
+const path = require('path');
 
 const db = require('./util/database');
 const User = require('./models/user');
@@ -13,7 +14,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 app.get('/',(req,res,next)=>{
-    res.sendFile(__dirname + '/views/signup.html')
+    //console.log('in Login Page middleware /');
+    res.sendFile(path.join(__dirname,'views','login.html'));
 });
 
 app.post('/user/signup', userController.signup);

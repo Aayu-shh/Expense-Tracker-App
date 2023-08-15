@@ -13,8 +13,8 @@ myForm.addEventListener('submit', (e) => {
 
     axios.post('http://localhost:2000/user/login', (existingUserObj))
         .then(resObj => {
+            //console.log(resObj.data);
             window.alert('User logged in Successfully');
-            // console.log(resObj.data);
         })
         .catch(err => {
             myDiv.innerHTML=" ";
@@ -24,8 +24,8 @@ myForm.addEventListener('submit', (e) => {
                 myDiv.classList.add("yellowText");
             }
             else{
-            myDiv.append(document.createTextNode(err.response.data));
-            myDiv.classList.add("redText");
+                myDiv.append(document.createTextNode(err.response.data));
+                myDiv.classList.add("redText");
             }
         });
 });
