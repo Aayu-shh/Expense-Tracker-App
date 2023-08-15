@@ -22,7 +22,8 @@ exports.login = (req, res, next) => {
     }})
     .then(result =>{
         console.log(result);
-        if(result!=[])
+        //console.log();
+        if (result.length)
             res.send({
                 message:'User logged in Succesfully',
                 success: true

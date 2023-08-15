@@ -18,5 +18,6 @@ myForm.addEventListener('submit', (e) => {
         })
         .catch(err => {
             myDiv.append(document.createTextNode(err));
+            myDiv.classList.add("redText");
         });
 });
