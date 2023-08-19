@@ -15,8 +15,10 @@ myForm.addEventListener('submit', async (e) => {
     
     try{
     const resObj = await axios.post('http://localhost:2000/user/signup', (newUserObj))
-    console.log(resObj.data);
+    //console.log(resObj.data);     -->> Shows for a sec then disappears as Login page is loaded instantly and console for that page comes up
+
     if(resObj.data.name != 'SequelizeUniqueConstraintError')
+        window.alert('Your signup was Success')
         window.location.href = 'login.html';            //navigate to Login Page
     }
     catch(err){

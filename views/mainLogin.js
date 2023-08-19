@@ -8,12 +8,15 @@ myForm.addEventListener('submit', (e) => {
         emailed: email.value,
         passed: pass.value
     }
-    //console.log("the name is: "+name.value+",, And email is: "+email.value+";;\n Password is: "+pass.value);
-    //console.log(existingUserObj);
+
 
     axios.post('http://localhost:2000/user/login', (existingUserObj))
         .then(resObj => {
             //console.log(resObj.data);
+            if(resObj.data.success){
+                window.location.href = resObj.data.redirect;
+            }
+
             window.alert('User logged in Successfully');
         })
         .catch(err => {
@@ -21,11 +24,11 @@ myForm.addEventListener('submit', (e) => {
             console.log(err);
             if(err.response.status==401){   
                 myDiv.append(document.createTextNode(err.response.data));
-                myDiv.classList.add("yellowText");
+                myDiv.classList.add("redText");
             }
             else{
                 myDiv.append(document.createTextNode(err.response.data));
-                myDiv.classList.add("redText");
+                myDiv.classList.add("yellowText");
             }
         });
 });
