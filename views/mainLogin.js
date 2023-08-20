@@ -12,12 +12,12 @@ myForm.addEventListener('submit', (e) => {
 
     axios.post('http://localhost:2000/user/login', (existingUserObj))
         .then(resObj => {
-            //console.log(resObj.data);
+            console.log(resObj.data);
             if(resObj.data.success){
+                window.localStorage.setItem('id', `${resObj.data.userId}`);
                 window.location.href = resObj.data.redirect;
-            }
-
-            window.alert('User logged in Successfully');
+                window.alert('User logged in Successfully');  
+            }            
         })
         .catch(err => {
             myDiv.innerHTML=" ";

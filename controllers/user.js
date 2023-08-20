@@ -24,21 +24,21 @@ exports.login = async (req, res) => {
     const email = req.body.emailed;
     const password = req.body.passed;
     try {
-        const user = await User.findAll({
+        const users = await User.findAll({
             where: {
                 Email: email
             }
         })
         // console.log(user);
-        if (user.length)      //if len>0  =>  Email FOUND
+        if (users.length)      //if len>0  =>  Email FOUND
         {
-            const dbHash = user[0].Password;
+            const dbHash = users[0].Password;
             //Remove Next Line  // Note - Logins for accounts before test8 won't AUTHORIZE
             console.log(dbHash + " ==> is the Password fetched From Database.");
 
             const isAuthorized = await bcrypt.compare(password, dbHash);
             if (isAuthorized) {
-                return res.json({ success: true, redirect: 'expensePage.html' });
+                return res.json({ success: true, redirect: 'expensePage.html', userId: users[0].id });
             }
             else {
                 res.status(401).send('Wrong password entered, User NOT Authorized !');
@@ -79,10 +79,10 @@ exports.deleteExpense = async (req, res) => {
     try {
         console.log(req.body);
         const response = await Expense.destroy({ where: { id: req.body.id } });
-        if(response == 1){
+        if (response == 1) {
             res.send(`Succesfully deleted expense with ID: ${req.body.id}`)
         }
-        else{
+        else {
             res.send('Something went Wrong! Check the Code!');
         }
 

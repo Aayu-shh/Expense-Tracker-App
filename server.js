@@ -13,10 +13,10 @@ const app = express();
 app.use(cors());
 //app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname,'views')));
+app.use(express.static(path.join(__dirname, 'views')));
 //app.set('views','views');
 
-app.get('/',(req,res,next)=>{
+app.get('/', (req, res, next) => {
     //console.log('in Login Page middleware /');
     console.log(path);
     res.redirect('/login.html');
@@ -26,16 +26,18 @@ app.post('/user/signup', userController.signup);
 
 app.post('/user/login', userController.login);
 
-app.post('/expense/addExpense',userController.addExpense);
+app.post('/expense/addExpense', userController.addExpense);
 
 app.get('/expense/getExpenses', userController.getExpenses);
 
-app.post('/expense/deleteExpense',userController.deleteExpense)
+app.post('/expense/deleteExpense', userController.deleteExpense)
 
-app.listen(2000, () => {
-    db.sync()
-        .then(() =>
-            console.log('Listening to port: ' + 2000))
-        .catch(err => console.log(err));
+User.hasMany(Expense);
+Expense.belongsTo(User);
 
-});
+db.sync()
+    .then(() => {
+        app.listen(2000);
+        console.log('Listening to port: ' + 2000);
+        })
+        .catch (err => console.log(err));

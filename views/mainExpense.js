@@ -14,38 +14,41 @@ const expList = document.querySelector("#elist");
 
 myForm.addEventListener('submit', async e => {
     e.preventDefault();
-    const expObj = { Amount: amount.value, Description: desc.value,Category: category.value };
+    const expObj = { Amount: amount.value, Description: desc.value, Category: category.value, userId: window.localStorage.getItem('id') };
     try {
         const responseObj = await axios.post('http://localhost:2000/expense/addExpense', expObj);
         //Extracting data from resonse ==> Same as expObj
         console.log(responseObj);
-        display(expObj);
+        displayExpense(expObj);
     }
     catch (err) { console.log(err); }
 })
 
-document.addEventListener('DOMContentLoaded', async e=>{
+document.addEventListener('DOMContentLoaded', async e => {
     const expenses = await axios.get('http://localhost:2000/expense/getExpenses');
     //console.log(expenses);
-    (expenses.data).forEach(expense=>{
-        display(expense);
+    (expenses.data).forEach(expense => {
+        displayExpense(expense);
     })
 })
 
-function display(obj){
-    const li = document.createElement('li');
-    li.append(document.createTextNode(`${obj.Amount} : ${obj.Description} : ${obj.Category}`));    
-    const deleteBtn = document.createElement('button');
-    deleteBtn.innerText = 'DELETE';
-    li.appendChild(deleteBtn);
-    deleteBtn.onclick = async event =>{
-        const response = await axios.post('http://localhost:2000/expense/deleteExpense',obj);
-        console.log(response.data);
-        expList.removeChild(li);
+function displayExpense(obj) {
+    if (isExpenseOfThisUser(obj)) {
+        const li = document.createElement('li');
+        li.append(document.createTextNode(`${obj.Amount} : ${obj.Category} : ${obj.Description}`));
+        const deleteBtn = document.createElement('button');
+        deleteBtn.innerText = 'DELETE';
+        li.appendChild(deleteBtn);
+        deleteBtn.onclick = async event => {
+            const response = await axios.post('http://localhost:2000/expense/deleteExpense', obj);
+            console.log(response.data);
+            expList.removeChild(li);
+        }
+        expList.appendChild(li);
     }
-    expList.appendChild(li);
 }
 
-
-
-
+function isExpenseOfThisUser(obj) {
+    if (obj.userId == window.localStorage.getItem('id'))
+        return true;
+}
