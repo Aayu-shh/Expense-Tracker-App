@@ -19,7 +19,7 @@ myForm.addEventListener('submit', async e => {
         const responseObj = await axios.post('http://localhost:2000/expense/addExpense', expObj);
         //Extracting data from resonse ==> Same as expObj
         console.log(responseObj);
-        displayExpense(expObj);
+        displayExpense(responseObj.data);
     }
     catch (err) { console.log(err); }
 })
