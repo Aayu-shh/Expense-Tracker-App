@@ -3,7 +3,6 @@ const cors = require('cors');
 const express = require('express');
 const path = require('path');
 
-//const path = require('./util/path');
 const db = require('./util/database');
 const User = require('./models/user');
 const Expense = require('./models/expense');

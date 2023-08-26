@@ -14,12 +14,12 @@ const expList = document.querySelector("#elist");
 
 myForm.addEventListener('submit', async e => {
     e.preventDefault();
-    const expObj = { Amount: amount.value, Description: desc.value, Category: category.value};
+    const expObj = { Amount: amount.value, Description: desc.value, Category: category.value };
     try {
-        const responseObj = await axios.post('http://localhost:2000/expense/addExpense', expObj, { headers: { "Authorization": localStorage.getItem("token") } });
+        const newExpenseObj = await axios.post('http://localhost:2000/expense/addExpense', expObj, { headers: { "Authorization": localStorage.getItem("token") } });
         //Extracting data from resonse ==> Same as expObj
-        console.log(responseObj);
-        displayExpense(responseObj.data);
+        console.log(newExpenseObj);
+        displayExpense(newExpenseObj.data);
     }
     catch (err) { console.log(err); }
 })
@@ -33,15 +33,15 @@ document.addEventListener('DOMContentLoaded', async e => {
 })
 
 function displayExpense(obj) {
-        const li = document.createElement('li');
-        li.append(document.createTextNode(`${obj.Amount} : ${obj.Category} : ${obj.Description}`));
-        const deleteBtn = document.createElement('button');
-        deleteBtn.innerText = 'DELETE';
-        li.appendChild(deleteBtn);
-        deleteBtn.onclick = async event => {
-            const response = await axios.post('http://localhost:2000/expense/deleteExpense', obj, { headers: { "Authorization": localStorage.getItem("token") } });
-            console.log(response.data);
-            expList.removeChild(li);
-        }
-        expList.appendChild(li);
+    const li = document.createElement('li');
+    li.append(document.createTextNode(`${obj.Amount} : ${obj.Category} : ${obj.Description}`));
+    const deleteBtn = document.createElement('button');
+    deleteBtn.innerText = 'DELETE';
+    li.appendChild(deleteBtn);
+    deleteBtn.onclick = async event => {
+        const response = await axios.post('http://localhost:2000/expense/deleteExpense', obj, { headers: { "Authorization": localStorage.getItem("token") } });
+        console.log(response.data);
+        expList.removeChild(li);
+    }
+    expList.appendChild(li);
 }

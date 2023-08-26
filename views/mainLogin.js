@@ -13,21 +13,20 @@ myForm.addEventListener('submit', (e) => {
     axios.post('http://localhost:2000/user/login', (existingUserObj))
         .then(resObj => {
             console.log(resObj.data);
-            if(resObj.data.success){
-                localStorage.setItem('id', `${resObj.data.userId}`);
+            if (resObj.data.success) {
                 localStorage.setItem('token', `${resObj.data.token}`);
                 location.href = resObj.data.redirect;
-                alert('User logged in Successfully');  
+                alert('User logged in Successfully');
             }
         })
         .catch(err => {
-            myDiv.innerHTML=" ";
+            myDiv.innerHTML = " ";
             console.log(err);
-            if(err.response.status==401){   
+            if (err.response.status == 401) {
                 myDiv.append(document.createTextNode(err.response.data));
                 myDiv.classList.add("redText");
             }
-            else{
+            else {
                 myDiv.append(document.createTextNode(err.response.data));
                 myDiv.classList.add("yellowText");
             }

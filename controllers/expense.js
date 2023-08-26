@@ -2,9 +2,15 @@ const Expense = require('../models/expense');
 
 
 exports.addExpense = async (req, res) => {
-    //const { Amount, Description, Category } = req.body;        //Extracting properties 
+    const { Amount, Description, Category } = req.body;        //Extracting properties 
     try {
-        const expense = await Expense.create(req.body)
+        const expenseObj = {
+            Amount: Amount,
+            Description: Description,
+            Category: Category,
+            userId: req.user.id
+        };
+        const expense = await Expense.create(expenseObj)
         return res.send(expense);
     }
     catch (err) {
@@ -15,7 +21,6 @@ exports.addExpense = async (req, res) => {
 exports.getExpenses = async (req, res) => {
     try {
         const expenses = await Expense.findAll({ where: { userId: req.user.id } });
-        //console.log(expenses)
         res.send(expenses);
     }
     catch (err) {
@@ -33,7 +38,6 @@ exports.deleteExpense = async (req, res) => {
         else {
             res.send('Something went Wrong! Check the Code!');
         }
-
     }
     catch (err) {
         console.log(err);
