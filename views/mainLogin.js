@@ -14,10 +14,11 @@ myForm.addEventListener('submit', (e) => {
         .then(resObj => {
             console.log(resObj.data);
             if(resObj.data.success){
-                window.localStorage.setItem('id', `${resObj.data.userId}`);
-                window.location.href = resObj.data.redirect;
-                window.alert('User logged in Successfully');  
-            }            
+                localStorage.setItem('id', `${resObj.data.userId}`);
+                localStorage.setItem('token', `${resObj.data.token}`);
+                location.href = resObj.data.redirect;
+                alert('User logged in Successfully');  
+            }
         })
         .catch(err => {
             myDiv.innerHTML=" ";

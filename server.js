@@ -7,7 +7,10 @@ const path = require('path');
 const db = require('./util/database');
 const User = require('./models/user');
 const Expense = require('./models/expense');
-const userController = require('./controllers/user')
+const userController = require('./controllers/user');
+const expenseController = require('./controllers/expense')
+const userAuth = require('./middlewares/auth');
+
 const app = express();
 
 app.use(cors());
@@ -26,11 +29,11 @@ app.post('/user/signup', userController.signup);
 
 app.post('/user/login', userController.login);
 
-app.post('/expense/addExpense', userController.addExpense);
+app.post('/expense/addExpense',userAuth.authenticate, expenseController.addExpense);
 
-app.get('/expense/getExpenses', userController.getExpenses);
+app.get('/expense/getExpenses', userAuth.authenticate, expenseController.getExpenses);
 
-app.post('/expense/deleteExpense', userController.deleteExpense)
+app.post('/expense/deleteExpense', userAuth.authenticate, expenseController.deleteExpense)
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
