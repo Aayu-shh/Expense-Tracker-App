@@ -6,9 +6,8 @@ const path = require('path');
 const db = require('./util/database');
 const User = require('./models/user');
 const Expense = require('./models/expense');
-const userController = require('./controllers/user');
-const expenseController = require('./controllers/expense')
-const userAuth = require('./middlewares/auth');
+const userRoutes = require('./routes/user');
+const expenseRoutes = require('./routes/expense');
 
 const app = express();
 
@@ -24,15 +23,9 @@ app.get('/', (req, res, next) => {
     res.redirect('/login.html');
 });
 
-app.post('/user/signup', userController.signup);
+app.use(userRoutes);
 
-app.post('/user/login', userController.login);
-
-app.post('/expense/addExpense',userAuth.authenticate, expenseController.addExpense);
-
-app.get('/expense/getExpenses', userAuth.authenticate, expenseController.getExpenses);
-
-app.post('/expense/deleteExpense', userAuth.authenticate, expenseController.deleteExpense)
+app.use(expenseRoutes);
 
 User.hasMany(Expense);
 Expense.belongsTo(User);
