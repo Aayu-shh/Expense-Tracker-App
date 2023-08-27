@@ -43,7 +43,7 @@ exports.login = async (req, res) => {
             const dbHash = users[0].Password;
             const isAuthorized = await bcrypt.compare(password, dbHash);
             if (isAuthorized) {
-                return res.json({ success: true, redirect: 'expensePage.html',token:tokenGenerator(users[0].id,users[0].Name) });
+                return res.json({ success: true, redirect: 'expensePage.html',token:tokenGenerator(users[0].id,users[0].Name),premium:users[0].isPremiumUser });
             }
             else {
                 res.status(401).send('Wrong password entered, User NOT Authorized !');

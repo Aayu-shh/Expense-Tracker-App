@@ -15,6 +15,7 @@ myForm.addEventListener('submit', (e) => {
             console.log(resObj.data);
             if (resObj.data.success) {
                 localStorage.setItem('token', `${resObj.data.token}`);
+                localStorage.setItem('isPremium', `${resObj.data.premium}`);
                 location.href = resObj.data.redirect;
                 alert('User logged in Successfully');
             }

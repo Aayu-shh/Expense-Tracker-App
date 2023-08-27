@@ -46,36 +46,40 @@ function displayExpense(obj) {
     expList.appendChild(li);
 }
 
-rzpBtnOne.addEventListener('click', async e => {
-    // e.preventDefault();
-    console.log("Youve hit BUY Premium Button, we're working on this feature , will be ready soon");
-    const response = await axios.get('http://localhost:2000/purchase/premiumMembership', { headers: { "Authorization": localStorage.getItem("token") } });
-    console.log(response);
-    var options = {
-        key: response.data.key_id,       //Key_id thrown from backend
-        order_id: response.data.order.id,    //Order object thrown from backend
-        handler: async paymentRes => {         //Callback if Payment is Success
-            
-            const paid = await axios.post("http://localhost:2000/purchase/updatePaymentStatus",{
-                order_id:options.order_id ,
-                payment_id:paymentRes.razorpay_payment_id
-            },{ headers: { "Authorization": localStorage.getItem('token') } });
-            console.log(paid);
-            console.log(paymentRes);
-            alert('You are a Premium Member Now!');
+if (localStorage.getItem("isPremium")=='true') {
+    const prm = document.createElement('div');
+    prm.innerHTML = "<b>PREMIUM USER<b>"
+    rzpBtnOne.replaceWith(prm);
+}
+else {
+    rzpBtnOne.addEventListener('click', async e => {
+        const response = await axios.get('http://localhost:2000/purchase/premiumMembership', { headers: { "Authorization": localStorage.getItem("token") } });
+        console.log(response);
+        var options = {
+            key: response.data.key_id,       //Key_id thrown from backend
+            order_id: response.data.order.id,    //Order object thrown from backend
+            handler: async paymentRes => {         //Callback if Payment is Success
+
+                const paid = await axios.post("http://localhost:2000/purchase/updatePaymentStatus", {
+                    order_id: options.order_id,
+                    payment_id: paymentRes.razorpay_payment_id
+                }, { headers: { "Authorization": localStorage.getItem('token') } });
+                localStorage.setItem("isPremium",true);
+                alert('You are a Premium Member Now!');
+            }
         }
-    }
-    //Display RazorPay popup from initializing RPay
-    const rzp1 = new Razorpay(options);
-    rzp1.open();
-    e.preventDefault();
+        //Display RazorPay popup from initializing RPay
+        const rzp1 = new Razorpay(options);
+        rzp1.open();
+        e.preventDefault();
 
-    rzp1.on('payment.failed',async resp=>{
-        const failed = await axios.post("http://localhost:2000/purchase/updatePaymentStatus", {
-            order_id: options.order_id
-        }, { headers: { "Authorization": localStorage.getItem('token') } });
-        console.log(failed);
-        alert('Something Went Wrong, please try again');  
+        rzp1.on('payment.failed', async resp => {
+            const failed = await axios.post("http://localhost:2000/purchase/updatePaymentStatus", {
+                order_id: options.order_id
+            }, { headers: { "Authorization": localStorage.getItem('token') } });
+            console.log(failed);
+            localStorage.setItem("isPremium",false)
+            alert('Something Went Wrong, please try again');
+        })
     })
-})
-
+}
