@@ -29,9 +29,16 @@ exports.updatePaymentStatus = async (req,res)=>{
     const { order_id,payment_id} = req.body;
     try{
     const myOrder = await Order.findOne({where:{orderid:order_id}});
+    if(!payment_id){
+        const response = await myOrder.update({ status: 'FAILED' });
+        const response1 = await req.user.update({ isPremiumUser: false });
+        res.status(200).json({message:"Payment Failed, Please retry"});
+    }
+    else{
     const response = await myOrder.update({status:'SUCCESSFFUL',paymentid:payment_id});
     const response1 = await req.user.update({isPremiumUser:true})
     res.status(202).json({message:"User is a Premium user Now"})
+    }
     }
     catch(err){
          res.status(403).json({message:"Something Went Wrong",error:err});

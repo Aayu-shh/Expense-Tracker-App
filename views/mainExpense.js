@@ -70,9 +70,12 @@ rzpBtnOne.addEventListener('click', async e => {
     rzp1.open();
     e.preventDefault();
 
-    rzp1.on('payment.failed',(resp)=>{
-        console.log(resp);
-        alert('Payment Failed, Something went Wrong');  
+    rzp1.on('payment.failed',async resp=>{
+        const failed = await axios.post("http://localhost:2000/purchase/updatePaymentStatus", {
+            order_id: options.order_id
+        }, { headers: { "Authorization": localStorage.getItem('token') } });
+        console.log(failed);
+        alert('Something Went Wrong, please try again');  
     })
 })
 
