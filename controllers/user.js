@@ -10,7 +10,7 @@ function tokenGenerator(id,name){
         userId:id,
         name:name
     }
-    const token = jwt.sign(payload, 'mySecretKey');
+    const token = jwt.sign(payload, process.env.TOKEN_SECRET);
     return(token);
 }
 

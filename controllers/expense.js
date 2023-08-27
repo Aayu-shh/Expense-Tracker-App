@@ -8,9 +8,9 @@ exports.addExpense = async (req, res) => {
             Amount: Amount,
             Description: Description,
             Category: Category,
-            userId: req.user.id
         };
-        const expense = await Expense.create(expenseObj)
+        //using Sequelize Magic Function createExpense()
+        const expense = await req.user.createExpense(expenseObj);
         return res.send(expense);
     }
     catch (err) {
