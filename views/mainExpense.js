@@ -47,17 +47,15 @@ function displayExpense(obj) {
 }
 
 if (localStorage.getItem("isPremium")=='true') {
-    const prm = document.createElement('div');
-    prm.innerHTML = "<b>PREMIUM USER<b>"
-    rzpBtnOne.replaceWith(prm);
+    showAsPremiumUser(rzpBtnOne);
 }
 else {
     rzpBtnOne.addEventListener('click', async e => {
-        const response = await axios.get('http://localhost:2000/purchase/premiumMembership', { headers: { "Authorization": localStorage.getItem("token") } });
-        console.log(response);
+        const newOrder = await axios.get('http://localhost:2000/purchase/premiumMembership', { headers: { "Authorization": localStorage.getItem("token") } });
+        console.log(newOrder);
         var options = {
-            key: response.data.key_id,       //Key_id thrown from backend
-            order_id: response.data.order.id,    //Order object thrown from backend
+            key: newOrder.data.key_id,       //Key_id thrown from backend
+            order_id: newOrder.data.order.id,    //Order object thrown from backend
             handler: async paymentRes => {         //Callback if Payment is Success
 
                 const paid = await axios.post("http://localhost:2000/purchase/updatePaymentStatus", {
@@ -65,6 +63,7 @@ else {
                     payment_id: paymentRes.razorpay_payment_id
                 }, { headers: { "Authorization": localStorage.getItem('token') } });
                 localStorage.setItem("isPremium",true);
+                showAsPremiumUser(rzpBtnOne);
                 alert('You are a Premium Member Now!');
             }
         }
@@ -82,4 +81,10 @@ else {
             alert('Something Went Wrong, please try again');
         })
     })
+}
+
+function showAsPremiumUser(rzpBtnOne){
+    const prm = document.createElement('div');
+    prm.innerHTML = "<b>PREMIUM USER<b>"
+    rzpBtnOne.replaceWith(prm);
 }
