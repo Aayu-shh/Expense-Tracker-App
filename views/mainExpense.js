@@ -103,14 +103,13 @@ function displayExpense(obj) {
 }
 
 async function ldrBrdCalc(){
-    const response = await axios.get('http://localhost:2000/expense/getLdrbrdData', { headers: { "Authorization": token } });
+    const response = await axios.get('http://localhost:2000/premium/getLeaderBoard', { headers: { "Authorization": token } });
     const userData = response.data;
-    console.log(userData);
-    const ol = document.createElement('ol');
-    for (let i = 0; i < userData.userNames.length; i++) {
+    const ul = document.createElement('ul');
+    for (let i = 0; i < userData.length; i++) {
         const li = document.createElement('li');
-        li.appendChild(document.createTextNode(`Name: ${userData.userNames[i]} ; Total Amount: ${userData.userExpenses[i]}`))
-        ol.appendChild(li);
+        li.appendChild(document.createTextNode(`Name: ${userData[i].name} ; Total Amount: ${userData[i].total_expense}`))
+        ul.appendChild(li);
     }
-    ldrdiv.appendChild(ol);
+    ldrdiv.appendChild(ul);
 }
