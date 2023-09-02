@@ -12,6 +12,10 @@ exports.addExpense = async (req, res) => {
         };
         //using Sequelize Magic Function createExpense()
         const expense = await req.user.createExpense(expenseObj);
+        const totalExp1 = req.user.totalExpense;
+        const newTotalExp = parseInt(totalExp1) + parseInt(Amount);
+        const respTotal = await req.user.update({'totalExpense': newTotalExp})
+        
         return res.send(expense);
     }
     catch (err) {
