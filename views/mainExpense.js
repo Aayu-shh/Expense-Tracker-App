@@ -43,7 +43,7 @@ if (localStorage.getItem("isPremium")=='true') {
         const ldrHeading = document.createElement('h1');
         ldrHeading.innerHTML = '<b>Leaderboard</b>';
         ldrdiv.appendChild(ldrHeading);
-        ldrBrdCalc();
+        leaderBoard();
     }
 
 }
@@ -102,13 +102,13 @@ function displayExpense(obj) {
     expList.appendChild(li);
 }
 
-async function ldrBrdCalc(){
+async function leaderBoard(){
     const response = await axios.get('http://localhost:2000/premium/getLeaderBoard', { headers: { "Authorization": token } });
     const userData = response.data;
     const ul = document.createElement('ul');
     for (let i = 0; i < userData.length; i++) {
         const li = document.createElement('li');
-        li.appendChild(document.createTextNode(`Name: ${userData[i].name} ; Total Amount: ${userData[i].total_expense}`))
+        li.appendChild(document.createTextNode(`Name: ${userData[i].Name} ; Total Amount: ${userData[i].totalExpenses||0}`));
         ul.appendChild(li);
     }
     ldrdiv.appendChild(ul);
