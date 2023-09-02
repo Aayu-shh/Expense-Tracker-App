@@ -5,6 +5,8 @@ const otherOpt = document.querySelector("#otherOpt");
 const myForm = document.querySelector("#myExpForm")
 const expList = document.querySelector("#elist");
 const rzpBtnOne = document.querySelector('#rzp-button1');
+const ldrBrdBtn = document.querySelector("#ldrbrd");
+const ldrdiv = document.querySelector('#ldrdiv');
 const token = localStorage.getItem("token");
 //--- To add TEXT BOX when Other option is clicked
 // otherOpt.addEventListener('click',(e) => {
@@ -33,24 +35,20 @@ document.addEventListener('DOMContentLoaded', async e => {
     })
 })
 
-function displayExpense(obj) {
-    const li = document.createElement('li');
-    li.append(document.createTextNode(`${obj.Amount} : ${obj.Category} : ${obj.Description}`));
-    const deleteBtn = document.createElement('button');
-    deleteBtn.innerText = 'DELETE';
-    li.appendChild(deleteBtn);
-    deleteBtn.onclick = async event => {
-        const response = await axios.post('http://localhost:2000/expense/deleteExpense', obj, { headers: { "Authorization": token } });
-        console.log(response.data);
-        expList.removeChild(li);
-    }
-    expList.appendChild(li);
-}
 
 if (localStorage.getItem("isPremium")=='true') {
     showAsPremiumUser(rzpBtnOne);
+    ldrBrdBtn.onclick = e =>{
+        e.preventDefault();
+        const ldrHeading = document.createElement('h1');
+        ldrHeading.innerHTML = '<b>Leaderboard</b>';
+        ldrdiv.appendChild(ldrHeading);
+        ldrBrdCalc();
+    }
+
 }
 else {
+    ldrBrdBtn.remove();
     rzpBtnOne.addEventListener('click', async e => {
         const newOrder = await axios.get('http://localhost:2000/purchase/premiumMembership', { headers: { "Authorization": token } });
         console.log(newOrder);
@@ -88,4 +86,31 @@ function showAsPremiumUser(rzpBtnOne){
     const prm = document.createElement('div');
     prm.innerHTML = "<b>PREMIUM USER<b>"
     rzpBtnOne.replaceWith(prm);
+}
+
+function displayExpense(obj) {
+    const li = document.createElement('li');
+    li.append(document.createTextNode(`${obj.Amount} : ${obj.Category} : ${obj.Description}`));
+    const deleteBtn = document.createElement('button');
+    deleteBtn.innerText = 'DELETE';
+    li.appendChild(deleteBtn);
+    deleteBtn.onclick = async event => {
+        const response = await axios.post('http://localhost:2000/expense/deleteExpense', obj, { headers: { "Authorization": token } });
+        console.log(response.data);
+        expList.removeChild(li);
+    }
+    expList.appendChild(li);
+}
+
+async function ldrBrdCalc(){
+    const response = await axios.get('http://localhost:2000/expense/getLdrbrdData', { headers: { "Authorization": token } });
+    const userData = response.data;
+    console.log(userData);
+    const ol = document.createElement('ol');
+    for (let i = 0; i < userData.userNames.length; i++) {
+        const li = document.createElement('li');
+        li.appendChild(document.createTextNode(`Name: ${userData.userNames[i]} ; Total Amount: ${userData.userExpenses[i]}`))
+        ol.appendChild(li);
+    }
+    ldrdiv.appendChild(ol);
 }

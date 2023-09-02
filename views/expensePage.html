@@ -24,12 +24,18 @@
         <input type="submit" value="ADD Expense">
     </form>
     <button id="rzp-button1">Buy Premium</button>
-    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <button id="ldrbrd">Show Leaderboard</button>
     <hr>
-    <ul id="elist">
+
+    <h1><b>Expenses</b></h1>
+
+    <ul id="elist" style="padding-left: 50px;">
         <!-- Expenses Here -->
     </ul>
+    
+    <div id="ldrdiv"></div>
 
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
     <script src="mainExpense.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
         integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="

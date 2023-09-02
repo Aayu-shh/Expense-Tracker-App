@@ -1,4 +1,5 @@
 const Expense = require('../models/expense');
+const User = require('../models/user');
 
 
 exports.addExpense = async (req, res) => {
@@ -25,6 +26,30 @@ exports.getExpenses = async (req, res) => {
     }
     catch (err) {
         console.log(err);
+    }
+}
+
+//FIX send USER names list and corresponding expenses //// list of objcts with UserName and Total expense!!
+exports.getLdrbrdData = async (req, res) => {
+    try {
+        var list = [];
+        var list1 = [];
+        const users = await User.findAll();
+        for(let i=0;i<users.length;i++){
+            const expenses = await Expense.findAll({ where: { userId: users[i].id } })
+            let amt = 0;
+            expenses.forEach(exp => {
+                amt +=  parseInt(exp.Amount);
+            })
+            list[i] = users[i].Name;
+            list1[i] = amt;
+         };
+
+         console.log(list1);
+         return res.status(200).json({'userNames':list,'userExpenses':list1});           
+    }
+    catch (err) {
+        throw new Error(JSON.stringify(err));
     }
 }
 
