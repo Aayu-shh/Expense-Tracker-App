@@ -36,6 +36,8 @@ exports.getExpenses = async (req, res) => {
 exports.deleteExpense = async (req, res) => {
     try {
         console.log(req.user);
+        const newExp = parseInt(req.user.totalExpense) - parseInt(req.body.Amount);
+        const updatedTotal = await req.user.update({'totalExpense': newExp});
         const response = await Expense.destroy({ where: { id: req.body.id } });
         if (response == 1) {
             res.send(`Succesfully deleted expense with ID: ${req.body.id}`)
