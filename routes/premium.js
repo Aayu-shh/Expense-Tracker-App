@@ -4,6 +4,6 @@ const express = require('express');
 
 const router = express.Router();
 
-router.get('/getLeaderBoard', userAuth.authenticate, premiumController.getLeaderBoard);
+router.get('/leaderBoard', userAuth.authenticate, premiumController.getLeaderBoard);
 
 module.exports = router;

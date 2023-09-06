@@ -4,11 +4,11 @@ const express = require('express');
 
 const router = express.Router();
 
-router.post('/addExpense', userAuth.authenticate, expenseController.addExpense);
+router.post('/add', userAuth.authenticate, expenseController.addExpense);
 
-router.get('/getExpenses', userAuth.authenticate, expenseController.getExpenses);
+router.get('/', userAuth.authenticate, expenseController.getExpenses);
 
-router.post('/deleteExpense', userAuth.authenticate, expenseController.deleteExpense);
+router.post('/delete', userAuth.authenticate, expenseController.deleteExpense);
 
 module.exports = router;
 

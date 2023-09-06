@@ -19,17 +19,14 @@ myForm.addEventListener('submit', async e => {
     e.preventDefault();
     const expObj = { Amount: amount.value, Description: desc.value, Category: category.value };
     try {
-        const newExpenseObj = await axios.post('http://localhost:2000/expense/addExpense', expObj, { headers: { "Authorization": token } });
-        //Extracting data from resonse ==> Same as expObj
-        console.log(newExpenseObj);
+        const newExpenseObj = await axios.post('http://localhost:2000/expense/add', expObj, { headers: { "Authorization": token } });
         displayExpense(newExpenseObj.data);
     }
     catch (err) { console.log(err); }
 })
 
 document.addEventListener('DOMContentLoaded', async e => {
-    const expenses = await axios.get('http://localhost:2000/expense/getExpenses', { headers: { "Authorization": token } });
-    console.log(expenses);
+    const expenses = await axios.get('http://localhost:2000/expense/', { headers: { "Authorization": token } });
     (expenses.data).forEach(expense => {
         displayExpense(expense);
     })
@@ -51,13 +48,12 @@ else {
     ldrBrdBtn.remove();
     rzpBtnOne.addEventListener('click', async e => {
         const newOrder = await axios.get('http://localhost:2000/purchase/premiumMembership', { headers: { "Authorization": token } });
-        console.log(newOrder);
         var options = {
             key: newOrder.data.key_id,       //Key_id thrown from backend
             order_id: newOrder.data.order.id,    //Order object thrown from backend
             handler: async paymentRes => {         //Callback if Payment is Success
 
-                const paid = await axios.post("http://localhost:2000/purchase/updatePaymentStatus", {
+                const paid = await axios.post("http://localhost:2000/purchase/payment", {
                     order_id: options.order_id,
                     payment_id: paymentRes.razorpay_payment_id
                 }, { headers: { "Authorization": token } });
@@ -72,7 +68,7 @@ else {
         e.preventDefault();
 
         rzp1.on('payment.failed', async resp => {
-            const failed = await axios.post("http://localhost:2000/purchase/updatePaymentStatus", {
+            const failed = await axios.post("http://localhost:2000/purchase/payment", {
                 order_id: options.order_id
             }, { headers: { "Authorization": token } });
             console.log(failed);
@@ -95,15 +91,14 @@ function displayExpense(obj) {
     deleteBtn.innerText = 'DELETE';
     li.appendChild(deleteBtn);
     deleteBtn.onclick = async event => {
-        const response = await axios.post('http://localhost:2000/expense/deleteExpense', obj, { headers: { "Authorization": token } });
-        console.log(response.data);
+        const response = await axios.post('http://localhost:2000/expense/delete', obj, { headers: { "Authorization": token } });
         expList.removeChild(li);
     }
     expList.appendChild(li);
 }
 
 async function leaderBoard(){
-    const response = await axios.get('http://localhost:2000/premium/getLeaderBoard', { headers: { "Authorization": token } });
+    const response = await axios.get('http://localhost:2000/premium/leaderBoard', { headers: { "Authorization": token } });
     const userData = response.data;
     const ul = document.createElement('ul');
     for (let i = 0; i < userData.length; i++) {
