@@ -7,6 +7,7 @@ const db = require('./util/database');
 const User = require('./models/user');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
+const ForgotPasswordRequest = require('./models/forgotpasswordrequest');
 const userRoutes = require('./routes/user');
 const expenseRoutes = require('./routes/expense');
 const purchaseRoutes = require('./routes/purchase');
@@ -16,7 +17,7 @@ const passwordRoutes = require('./routes/password');
 const app = express();
 
 app.use(cors());
-//app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, 'views')));
 //app.set('views','views');
@@ -38,6 +39,9 @@ Expense.belongsTo(User);
 
 User.hasMany(Order);
 Order.belongsTo(User);
+
+User.hasMany(ForgotPasswordRequest);
+ForgotPasswordRequest.belongsTo(User);
 
 db.sync()
     .then(() => {
