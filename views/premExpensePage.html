@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Expense Report</title>
+    <style>
+        h3 {
+            text-align: center;
+        }
+
+        table {
+            margin-inline: auto;
+        }
+
+        table,
+        td {
+            border: 1px solid #333;
+        }
+
+        thead {
+            background-color: #1d8bbd;
+            color: #fff;
+        }
+
+        .displayNone {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- <form id="reportTypeForm"> -->
+    <label for="reportType">Select</label>
+    <select name="reportType" id="reportType">
+        <option>Daily</option>
+        <option>Weekly</option>
+        <option>Monthly</option>
+    </select>
+    <!-- <button type="submit">Show</button> -->
+    </form>
+    <div id="dailyTableDiv">
+        <h3>Daily Expense</h3>
+        <table id="dailyTable" calss>
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th>Expense</th>
+                </tr>
+            </thead>
+            <tbody id="dailyBody">
+                <tr>
+                    <td>05/10/2023</td>
+                    <td>Book</td>
+                    <td>Shopping</td>
+                    <td>200</td>
+                </tr>
+                <tr>
+                    <td>07/10/2023</td>
+                    <td>Coffee</td>
+                    <td>Shopping</td>
+                    <td>250</td>
+                </tr>
+                <tr>
+                    <td>11/10/2023</td>
+                    <td>Fuel</td>
+                    <td>Fuel</td>
+                    <td>800</td>
+                </tr>
+                <tr>
+                    <td>14/10/2023</td>
+                    <td>Choclate</td>
+                    <td>Shopping</td>
+                    <td>60</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="weeklyTableDiv">
+        <h3>Weekly Expense</h3>
+
+        <table id="weekyTable">
+            <thead>
+                <tr>
+                    <th>Week</th>
+                    <th>Expense</th>
+                </tr>
+            </thead>
+            <tbody id="weeklyBody">
+                <tr>
+                    <td>01/10/2023</td>
+                    <td>450</td>
+                </tr>
+                <tr>
+                    <td>08/10/2023</td>
+                    <td>860</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="monthlyTableDiv">
+        <h3>Monthly Expense</h3>
+        <table id="mothlyTable">
+            <thead>
+                <tr>
+                    <th>Month</th>
+                    <th>Expense</th>
+                </tr>
+            </thead>
+            <tbody id="monthlyBody">
+                <tr>
+                    <td>October</td>
+                    <td>1310</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <a href="expensePage.html">Back</a>
+
+</body>
+<script>
+    document.getElementById("dailyTableDiv").classList = "";
+    document.getElementById("weeklyTableDiv").classList = "displayNone";
+    document.getElementById("monthlyTableDiv").classList = "displayNone";
+
+    document.getElementById("reportType").addEventListener("change", (e) => {
+        if (e.target.value == "Daily") {
+            document.getElementById("dailyTableDiv").classList = "";
+            document.getElementById("weeklyTableDiv").classList = "displayNone";
+            document.getElementById("monthlyTableDiv").classList = "displayNone";
+        }
+        else if (e.target.value == "Weekly") {
+            document.getElementById("weeklyTableDiv").classList = "";
+            document.getElementById("dailyTableDiv").classList = "displayNone";
+            document.getElementById("monthlyTableDiv").classList = "displayNone";
+        }
+        else if (e.target.value == "Monthly") {
+            document.getElementById("monthlyTableDiv").classList = "";
+            document.getElementById("weeklyTableDiv").classList = "displayNone";
+            document.getElementById("dailyTableDiv").classList = "displayNone";
+        }
+
+    })
+
+</script>
+
+
+</html>
