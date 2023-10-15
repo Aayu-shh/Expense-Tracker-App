@@ -7,6 +7,7 @@ const expList = document.querySelector("#elist");
 const rzpBtnOne = document.querySelector('#rzp-button1');
 const ldrBrdBtn = document.querySelector("#ldrbrd");
 const ldrdiv = document.querySelector('#ldrdiv');
+const rprtBtn = document.querySelector("#report")
 const token = localStorage.getItem("token");
 //--- To add TEXT BOX when Other option is clicked
 // otherOpt.addEventListener('click',(e) => {
@@ -41,16 +42,28 @@ if (localStorage.getItem("isPremium")=='true') {
         ldrHeading.innerHTML = '<b>Leaderboard</b>';
         ldrdiv.appendChild(ldrHeading);
         leaderBoard();
+
     }
 
 }
 else {
     ldrBrdBtn.remove();
+    rprtBtn.remove();
     rzpBtnOne.addEventListener('click', async e => {
         const newOrder = await axios.get('http://localhost:2000/purchase/premiumMembership', { headers: { "Authorization": token } });
         var options = {
             key: newOrder.data.key_id,       //Key_id thrown from backend
+            name:"Chattisgarh Tractors",
             order_id: newOrder.data.order.id,    //Order object thrown from backend
+            prefill:{
+                name:"Ajay Agrawal",
+                email:"cgtractors1@gmail.com",
+                contact:"+919926654343"
+
+            },
+            "theme": {
+                "color": "#3399cc"
+            },
             handler: async paymentRes => {         //Callback if Payment is Success
 
                 const paid = await axios.post("http://localhost:2000/purchase/payment", {
