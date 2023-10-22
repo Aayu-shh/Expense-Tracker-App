@@ -8,6 +8,7 @@ const rzpBtnOne = document.querySelector('#rzp-button1');
 const ldrBrdBtn = document.querySelector("#ldrbrd");
 const ldrdiv = document.querySelector('#ldrdiv');
 const rprtBtn = document.querySelector("#report");
+const dwnldBtn = document.querySelector('#dwnld');
 const token = localStorage.getItem("token");
 //--- To add TEXT BOX when Other option is clicked
 // otherOpt.addEventListener('click',(e) => {
@@ -33,12 +34,12 @@ document.addEventListener('DOMContentLoaded', async e => {
     })
 })
 
-if (localStorage.getItem("isPremium")=='true') {
+if (localStorage.getItem("isPremium") == 'true') {
     showAsPremiumUser(rzpBtnOne);
-    rprtBtn.onclick = e=>{
+    rprtBtn.onclick = e => {
         window.location = "./expenseReportPrem.html";
     }
-    ldrBrdBtn.onclick = e =>{
+    ldrBrdBtn.onclick = e => {
         e.preventDefault();
         const ldrHeading = document.createElement('h1');
         ldrHeading.innerHTML = '<b>Leaderboard</b>';
@@ -46,20 +47,33 @@ if (localStorage.getItem("isPremium")=='true') {
         leaderBoard();
 
     }
+    dwnldBtn.onclick = async e => {
+        const downloadRes = await axios.get('http://localhost:2000/premium/download/', { headers: { "Authorization": token } });
+        if(downloadRes.status==200){
+            var a = document.createElement('a');
+            a.href = downloadRes.data.fileURL;
+            a.download = 'myexpense.txt';
+            a.click();
+        }
+        else{
+            console.log("Failed");
+        }
+    }
 }
 else {
     ldrBrdBtn.remove();
     rprtBtn.remove();
+    dwnldBtn.remove();
     rzpBtnOne.addEventListener('click', async e => {
         const newOrder = await axios.get('http://localhost:2000/purchase/premiumMembership', { headers: { "Authorization": token } });
         var options = {
             key: newOrder.data.key_id,       //Key_id thrown from backend
-            name:"Chattisgarh Tractors",
+            name: "Chattisgarh Tractors",
             order_id: newOrder.data.order.id,    //Order object thrown from backend
-            prefill:{
-                name:"Ajay Agrawal",
-                email:"cgtractors1@gmail.com",
-                contact:"+919926654343"
+            prefill: {
+                name: "Ajay Agrawal",
+                email: "cgtractors1@gmail.com",
+                contact: "+919926654343"
 
             },
             "theme": {
@@ -71,7 +85,7 @@ else {
                     order_id: options.order_id,
                     payment_id: paymentRes.razorpay_payment_id
                 }, { headers: { "Authorization": token } });
-                localStorage.setItem('isPremium',true);
+                localStorage.setItem('isPremium', true);
                 showAsPremiumUser(rzpBtnOne);
                 alert('You are a Premium Member Now!');
             }
@@ -86,13 +100,13 @@ else {
                 order_id: options.order_id
             }, { headers: { "Authorization": token } });
             console.log(failed);
-            localStorage.setItem("isPremium",false)
+            localStorage.setItem("isPremium", false)
             alert('Something Went Wrong, please try again');
         })
     })
 }
 
-function showAsPremiumUser(rzpBtnOne){
+function showAsPremiumUser(rzpBtnOne) {
     const prm = document.createElement('div');
     prm.innerHTML = "<b>PREMIUM USER<b>"
     rzpBtnOne.replaceWith(prm);
@@ -111,13 +125,13 @@ function displayExpense(obj) {
     expList.appendChild(li);
 }
 
-async function leaderBoard(){
+async function leaderBoard() {
     const response = await axios.get('http://localhost:2000/premium/leaderBoard', { headers: { "Authorization": token } });
     const userData = response.data;
     const ul = document.createElement('ul');
     for (let i = 0; i < userData.length; i++) {
         const li = document.createElement('li');
-        li.appendChild(document.createTextNode(`Name: ${userData[i].Name} ; Total Amount: ${userData[i].totalExpenses||0}`));
+        li.appendChild(document.createTextNode(`Name: ${userData[i].Name} ; Total Amount: ${userData[i].totalExpenses || 0}`));
         ul.appendChild(li);
     }
     ldrdiv.appendChild(ul);
