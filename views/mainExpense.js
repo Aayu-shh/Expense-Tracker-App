@@ -7,7 +7,7 @@ const expList = document.querySelector("#elist");
 const rzpBtnOne = document.querySelector('#rzp-button1');
 const ldrBrdBtn = document.querySelector("#ldrbrd");
 const ldrdiv = document.querySelector('#ldrdiv');
-const rprtBtn = document.querySelector("#report")
+const rprtBtn = document.querySelector("#report");
 const token = localStorage.getItem("token");
 //--- To add TEXT BOX when Other option is clicked
 // otherOpt.addEventListener('click',(e) => {
@@ -33,9 +33,11 @@ document.addEventListener('DOMContentLoaded', async e => {
     })
 })
 
-
 if (localStorage.getItem("isPremium")=='true') {
     showAsPremiumUser(rzpBtnOne);
+    rprtBtn.onclick = e=>{
+        window.location = "./expenseReportPrem.html";
+    }
     ldrBrdBtn.onclick = e =>{
         e.preventDefault();
         const ldrHeading = document.createElement('h1');
@@ -44,7 +46,6 @@ if (localStorage.getItem("isPremium")=='true') {
         leaderBoard();
 
     }
-
 }
 else {
     ldrBrdBtn.remove();

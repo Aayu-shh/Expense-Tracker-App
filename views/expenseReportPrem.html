@@ -118,7 +118,7 @@
             </tbody>
         </table>
     </div>
-    <a href="expensePage.html">Back</a>
+    <button id="backbtn">Back</button>
 
 </body>
 <script>
@@ -144,6 +144,7 @@
         }
 
     })
+    document.getElementById('backbtn').onclick = e => window.location = "./expensePage.html";
 
 </script>
 
