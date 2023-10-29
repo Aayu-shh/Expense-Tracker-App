@@ -6,8 +6,7 @@ const router = express.Router();
 
 router.get('/leaderBoard', userAuth.authenticate, premiumController.getLeaderBoard);
 
-//yet to hit from frontend
-router.get('/report', userAuth.authenticate, premiumController.getReport);
+router.get('/reports', userAuth.authenticate, premiumController.getReports);
 
 router.get('/download',userAuth.authenticate,premiumController.downloadReport);
 

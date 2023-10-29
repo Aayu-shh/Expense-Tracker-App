@@ -1,7 +1,7 @@
 const Expense = require('../models/expense');
 const User = require('../models/user');
 const sequelize = require('../util/database');
-
+const UserServices = require('../services/userservices');
 
 exports.addExpense = async (req, res) => {
     const t = await sequelize.transaction();
@@ -29,7 +29,7 @@ exports.addExpense = async (req, res) => {
 
 exports.getExpenses = async (req, res) => {
     try {
-        const expenses = await Expense.findAll({ where: { userId: req.user.id } });
+        const expenses = await UserServices.getExpenses(req);
         res.send(expenses);
     }
     catch (err) {
@@ -41,7 +41,7 @@ exports.deleteExpense = async (req, res) => {
     const t = await sequelize.transaction();
     const newExp = parseInt(req.user.totalExpense) - parseInt(req.body.Amount);
     try {
-        const updatedTotal = await req.user.update({ 'totalExpense': newExp }, { transaction: t });
+        await req.user.update({ 'totalExpense': newExp }, { transaction: t });
         const response = await Expense.destroy({ where: { id: req.body.id } }, { transaction: t });
         if (response == 1) {
             await t.commit();
@@ -49,7 +49,7 @@ exports.deleteExpense = async (req, res) => {
         }
         else {
             await t.rollback();
-            res.send('Something went Wrong! Check the Code!');
+            res.status(204).send("Something went wrong, expense not in DB");
         }
     }
     catch (err) {

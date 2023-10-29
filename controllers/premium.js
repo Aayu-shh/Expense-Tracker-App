@@ -1,7 +1,9 @@
-const AWS = require('aws-sdk');
+const Sequelize = require('sequelize');
 const User = require('../models/user');
 const Expense = require('../models/expense');
-const Sequelize = require('sequelize');
+const Reports = require('../models/report');
+const UserServices = require('../services/userservices');
+const S3Services = require('../services/S3services');
 exports.getLeaderBoard = async (req, res) => {
     try {
         // Fetch all users id,Name and their total expenses
@@ -18,60 +20,41 @@ exports.getLeaderBoard = async (req, res) => {
                     attributes: [],
                 },
             ],
-            group: ['User.id'], // Group by user to calculate total expenses per user
+            group: ['User.id'], // Group by userId to calculate total expenses per user
             order: [[Sequelize.literal('totalExpenses'), 'DESC']] // Order by total expenses in descending order
         })
         return res.status(200).send(users);
     }
     catch (err) {
-        console.log(err)
+        console.log(err);
+        res.status(500).send({ sucess: false, error: new Error(err) });
     }
 }
 
-exports.getReport = async (req, res) => {
-
-}
-
-
-function uploadToS3(data, fileName) {
-    const BUCKET_NAME = 'expensetrackerapp2';
-    //Initialize bucket
-    let s3bucket = new AWS.S3({
-        accessKeyId: process.env.IAM_USER_KEY,
-        secretAccessKey: process.env.IAM_USER_SECRET,
-    })
-
-    var params = {
-        Bucket: BUCKET_NAME,
-        Key: fileName,
-        Body: data,
-        ACL: 'public-read'
+exports.getReports = async (req, res) => {
+    try {
+        const reports = await UserServices.getReports(req);
+        res.status(200).send(reports);
     }
-    return new Promise((resolve,reject)=>{
-
-        s3bucket.upload(params, (err, s3response) => {
-            if (err) {
-                reject(err);
-            }
-            else {
-                resolve(s3response.Location);
-            }
-        });
-    })
+    catch (err) {
+        res.send(err);
+    }
 }
+
 
 exports.downloadReport = async (req, res) => {
-    try{
-    const expenses = await req.user.getExpenses();
-    const stringifiedExp = JSON.stringify(expenses);
-    const userID = req.user.id;
-    const fileName = `Expenses${userID}/${new Date()}.txt`;
-    const fileURL = await uploadToS3(stringifiedExp, fileName);
-    res.status(200).send({ fileURL, sucess: true });
+    try {
+        const expenses = await UserServices.getExpenses(req);
+        const stringifiedExp = JSON.stringify(expenses);
+        const userID = req.user.id;
+        const fileName = `Expenses${userID}/${new Date()}.txt`;
+        const fileURL = await S3Services.uploadToS3(stringifiedExp, fileName);
+        const downloadedReportsTableInsert = await req.user.createReport({ url: fileURL });
+        res.status(200).send({ fileURL,createdAt:downloadedReportsTableInsert.createdAt ,sucess: true });
     }
-    catch(err){
+    catch (err) {
         console.log(err);
-        res.status(500).json({success:false,err});
+        res.status(500).json({ success: false, err });
     }
 }
 

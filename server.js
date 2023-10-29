@@ -8,6 +8,7 @@ const User = require('./models/user');
 const Expense = require('./models/expense');
 const Order = require('./models/order');
 const ForgotPasswordRequest = require('./models/forgotpasswordrequest');
+const Report = require('./models/report');
 const userRoutes = require('./routes/user');
 const expenseRoutes = require('./routes/expense');
 const purchaseRoutes = require('./routes/purchase');
@@ -42,6 +43,9 @@ Order.belongsTo(User);
 
 User.hasMany(ForgotPasswordRequest);
 ForgotPasswordRequest.belongsTo(User);
+
+User.hasMany(Report)
+Report.belongsTo(User);
 
 db.sync()
     .then(() => {
