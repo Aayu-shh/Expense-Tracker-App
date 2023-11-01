@@ -1,4 +1,4 @@
 const {Sequelize} = require('sequelize');
-const sequelize = new Sequelize('expense','root','#Ash28jun#',{host:'localhost',dialect:'mysql'});
+const sequelize = new Sequelize('expense','root',process.env.DB_PASS,{host:'localhost',dialect:'mysql'});
 
 module.exports = sequelize;
