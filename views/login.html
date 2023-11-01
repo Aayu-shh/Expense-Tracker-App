@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <style>
+        .redText{
+            font-family: 'Times New Roman', Times, serif;
+            font-size: larger;
+            color: red;
+        }
+        .yellowText{
+            font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+            font-size: large;
+            color: rgb(91, 91, 34)
+        }
+    </style>
+</head>
+
+<body>
+    <form id="myform" action="/">
+        <label for="email">Email: </label>
+        <input type="email" name="email" id="email" required>
+        <label for="pass">Password: </label>
+        <input type="password" name="pass" id="pass">
+        <input type="submit" value="SUBMIT">
+    </form>
+    <a href="signup.html">New User - Signup Here</a>
+    <a href="forgotpass.html">Forgot Password</a>
+    <div id="myDiv"></div>
+    
+    <script src="mainLogin.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"
+        integrity="sha512-uMtXmF28A2Ab/JJO2t/vYhlaa/3ahUOgj1Zf27M5rOo8/+fcTUVH0/E0ll68njmjrLqOBjXM3V9NiPFL5ywWPQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+</body>
+
+</html>
