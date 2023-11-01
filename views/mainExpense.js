@@ -26,6 +26,10 @@ myForm.addEventListener('submit', async e => {
     try {
         const newExpenseObj = await axios.post('http://localhost:2000/expense/add', expObj, { headers: { "Authorization": token } });
         displayExpense(newExpenseObj.data);
+    
+    amount.value="";
+    category.value="";
+    desc.value="";
     }
     catch (err) { console.log(err); }
 })
@@ -39,7 +43,7 @@ document.addEventListener('DOMContentLoaded', async e => {
     if (isPremium ==='true') {
         const reports = await axios.get("http://localhost:2000/premium/reports/", { headers: { "Authorization": token } });
         (reports.data).forEach(report => {
-            displayDownloadedFile(report);
+            displayDownloadedFileInList(report);
         })
         showAsPremiumUser(rzpBtnOne);
         rprtBtn.onclick = e => {
@@ -58,10 +62,9 @@ document.addEventListener('DOMContentLoaded', async e => {
             if (downloadRes.status == 200) {
                 var a = document.createElement('a');
                 a.href = downloadRes.data.fileURL;
-                console.log(downloadRes);
                 a.click();
                 var tmpRprtObj = { url: a.href, createdAt: downloadRes.data.createdAt }
-                displayDownloadedFile(tmpRprtObj);
+                displayDownloadedFileInList(tmpRprtObj);
             }
             else {
                 console.log("Failed");
@@ -102,7 +105,6 @@ document.addEventListener('DOMContentLoaded', async e => {
             //Display RazorPay popup from initializing RPay
             const rzp1 = new Razorpay(options);
             rzp1.open();
-            e.preventDefault();
 
             rzp1.on('payment.failed', async resp => {
                 const failed = await axios.post("http://localhost:2000/purchase/payment", {
@@ -141,7 +143,7 @@ function displayExpense(obj) {
     expList.appendChild(li);
 }
 
-function displayDownloadedFile(report) {
+function displayDownloadedFileInList(report) {
     const li = document.createElement('li');
     li.innerHTML = `Report from ${report.createdAt}`;
     const dwnldBtn = document.createElement('button');

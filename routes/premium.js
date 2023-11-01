@@ -8,6 +8,8 @@ router.get('/leaderBoard', userAuth.authenticate, premiumController.getLeaderBoa
 
 router.get('/reports', userAuth.authenticate, premiumController.getReports);
 
+router.get('/reportTable/:type',userAuth.authenticate,premiumController.getReportTable);
+
 router.get('/download',userAuth.authenticate,premiumController.downloadReport);
 
 module.exports = router;
