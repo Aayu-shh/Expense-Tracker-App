@@ -6,6 +6,7 @@ const myForm = document.querySelector("#myExpForm")
 const expList = document.querySelector("#elist");
 const rzpBtnOne = document.querySelector('#rzp-button1');
 const ldrBrdBtn = document.querySelector("#ldrbrd");
+const pgNumDiv = document.querySelector("#pageNumDiv");
 const ldrdiv = document.querySelector('#ldrdiv');
 const dwnlddiv = document.querySelector('#dwnlddiv')
 const rprtBtn = document.querySelector("#report");
@@ -20,28 +21,54 @@ const isPremium = localStorage.getItem("isPremium");
 //     otherOpt.replaceChild(textInput);
 // })
 
+const backendApi = 'http://localhost:2000';
 myForm.addEventListener('submit', async e => {
     e.preventDefault();
     const expObj = { Amount: amount.value, Description: desc.value, Category: category.value };
     try {
-        const newExpenseObj = await axios.post('http://localhost:2000/expense/add', expObj, { headers: { "Authorization": token } });
+        const newExpenseObj = await axios.post(`${backendApi}/expense/add`, expObj, { headers: { "Authorization": token } });
         displayExpense(newExpenseObj.data);
-    
-    amount.value="";
-    category.value="";
-    desc.value="";
+
+        amount.value = "";
+        category.value = "";
+        desc.value = "";
     }
     catch (err) { console.log(err); }
 })
 
 document.addEventListener('DOMContentLoaded', async e => {
-    const expenses = await axios.get('http://localhost:2000/expense/', { headers: { "Authorization": token } });
-    (expenses.data).forEach(expense => {
-        displayExpense(expense);
-    })
+    const expensesObj = await getPageExpenses(1);
+    expensesObj.expenses.forEach(exp => displayExpense(exp));
+    {
+        const currentPageBtn = createPageButton()
+        pgNumDiv.append(currentPageBtn);
+    }
+    if (expensesObj.hasNext) {
+        const nxtPageBtn = createPageButton(expensesObj.currentPage + 1)
+        pgNumDiv.append(nxtPageBtn);
+    }
 
-    if (isPremium ==='true') {
-        const reports = await axios.get("http://localhost:2000/premium/reports/", { headers: { "Authorization": token } });
+    pgNumDiv.addEventListener('click', async e => {
+        if (e.target.tagName === 'BUTTON') {
+            pgNumDiv.replaceChildren('');
+            const currentPageNum = parseInt(e.target.innerText);
+            const expensesObj = await getPageExpenses(currentPageNum);
+            if (expensesObj.hasPrevious) {
+                const prevPgBtn = createPageButton(currentPageNum - 1)
+                pgNumDiv.append(prevPgBtn);
+            }
+            {
+                const currentPageBtn = createPageButton(currentPageNum)
+                pgNumDiv.append(currentPageBtn);
+            }
+            if (expensesObj.hasNext) {
+                const nxtPageBtn = createPageButton(currentPageNum + 1)
+                pgNumDiv.append(nxtPageBtn);
+            }
+        }
+    })
+    if (isPremium === 'true') {
+        const reports = await axios.get(`${backendApi}/premium/reports/`, { headers: { "Authorization": token } });
         (reports.data).forEach(report => {
             displayDownloadedFileInList(report);
         })
@@ -58,7 +85,7 @@ document.addEventListener('DOMContentLoaded', async e => {
 
         }
         dwnldBtn.onclick = async e => {
-            const downloadRes = await axios.get('http://localhost:2000/premium/download/', { headers: { "Authorization": token } });
+            const downloadRes = await axios.get(`${backendApi}/premium/download/`, { headers: { "Authorization": token } });
             if (downloadRes.status == 200) {
                 var a = document.createElement('a');
                 a.href = downloadRes.data.fileURL;
@@ -77,7 +104,7 @@ document.addEventListener('DOMContentLoaded', async e => {
         dwnldBtn.remove();
         dwnlddiv.remove();
         rzpBtnOne.addEventListener('click', async e => {
-            const newOrder = await axios.get('http://localhost:2000/purchase/premiumMembership', { headers: { "Authorization": token } });
+            const newOrder = await axios.get(`${backendApi}/purchase/premiumMembership`, { headers: { "Authorization": token } });
             var options = {
                 key: newOrder.data.key_id,       //Key_id thrown from backend
                 name: "Chattisgarh Tractors",
@@ -107,7 +134,7 @@ document.addEventListener('DOMContentLoaded', async e => {
             rzp1.open();
 
             rzp1.on('payment.failed', async resp => {
-                const failed = await axios.post("http://localhost:2000/purchase/payment", {
+                const failed = await axios.post(`${backendApi}/purchase/payment`, {
                     order_id: options.order_id
                 }, { headers: { "Authorization": token } });
                 console.log(failed);
@@ -119,12 +146,30 @@ document.addEventListener('DOMContentLoaded', async e => {
 
 })
 
+function createPageButton(pgNum, onClickCallback) {
+    const pageBtn = document.createElement('button');
+    pgNum = pgNum || 1;
+    pageBtn.innerText = `${pgNum}`
+    pageBtn.onclick = async () => {
+        expList.replaceChildren("");
+        const pageExpObj = await getPageExpenses(pgNum);
+        pageExpObj.expenses.forEach(expense => displayExpense(expense));
+    }
+    return pageBtn;
+}
+
 function showAsPremiumUser(rzpBtnOne) {
     const prm = document.createElement('div');
     prm.innerHTML = "<b>PREMIUM USER<b>";
     rzpBtnOne.replaceWith(prm);
 }
 
+async function getPageExpenses(page) {
+    const response = await axios.get(`${backendApi}/expense?page=${page}`, { headers: { "Authorization": token } });
+    const expensesObj = response.data;
+    return expensesObj;
+
+}
 function displayExpense(obj) {
     const li = document.createElement('li');
     li.append(document.createTextNode(`${obj.Amount} : ${obj.Category} : ${obj.Description}`));
@@ -133,7 +178,7 @@ function displayExpense(obj) {
     li.appendChild(deleteBtn);
     deleteBtn.onclick = async event => {
         try {
-            const response = await axios.post('http://localhost:2000/expense/delete', obj, { headers: { "Authorization": token } });
+            const response = await axios.post(`${backendApi}/expense/delete`, obj, { headers: { "Authorization": token } });
             expList.removeChild(li);
         }
         catch (err) {
@@ -158,7 +203,7 @@ function displayDownloadedFileInList(report) {
 }
 
 async function leaderBoard() {
-    const response = await axios.get('http://localhost:2000/premium/leaderBoard', { headers: { "Authorization": token } });
+    const response = await axios.get(`${backendApi}/premium/leaderBoard`, { headers: { "Authorization": token } });
     const userData = response.data;
     const ul = document.createElement('ul');
     for (let i = 0; i < userData.length; i++) {

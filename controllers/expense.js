@@ -29,8 +29,20 @@ exports.addExpense = async (req, res) => {
 
 exports.getExpenses = async (req, res) => {
     try {
-        const expenses = await UserServices.getExpenses(req);
-        res.send(expenses);
+        const page = parseInt(req.query.page)||1;
+        const countExp = await Expense.count({where:{userId:req.user.id}});
+        const expenses = await UserServices.getExpenses(req, { offset: (page - 1) * 10, limit: 10 });
+        let numOfPages = parseInt(countExp / 10);
+        if (countExp % 10 != 0) numOfPages++;
+        let expenseOp = {
+            expenses: expenses,
+            currentPage: page, 
+            lastPage: numOfPages, 
+            hasPrevious: (page - 1 > 0) ? true : false, 
+            hasNext: ((page < numOfPages) ? true : false), 
+            next: page + 1
+        }
+        res.send(expenseOp);
     }
     catch (err) {
         console.log(err);
@@ -55,6 +67,6 @@ exports.deleteExpense = async (req, res) => {
     catch (err) {
         await t.rollback();
         console.log(err);
-        res.status(500).json({success:false,error:err});
+        res.status(500).json({ success: false, error: err });
     }
 }
