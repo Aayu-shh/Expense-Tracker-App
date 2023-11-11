@@ -46,14 +46,15 @@ document.addEventListener('DOMContentLoaded', async e => {
     if (expensesObj.hasNext) {
         pgNumDiv.append(createPageButton(expensesObj.currentPage + 1));
     }
-    pgNumDiv.append(createPageButton(lastPage));
+    if (lastPage > expensesObj.currentPage)
+        pgNumDiv.append(createPageButton(lastPage));
 
     pgNumDiv.addEventListener('click', async e => {
         if (e.target.tagName === 'BUTTON') {
             pgNumDiv.replaceChildren('');
             const currentPageNum = parseInt(e.target.innerText);
             const expensesObj = await getPageExpenses(currentPageNum);
-            let lastPage = expensesObj.lastPage;            
+            lastPage = expensesObj.lastPage;
             if (expensesObj.hasPrevious) {
                 const prevPgBtn = createPageButton(currentPageNum - 1)
                 pgNumDiv.append(prevPgBtn);
