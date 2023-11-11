@@ -38,21 +38,22 @@ myForm.addEventListener('submit', async e => {
 
 document.addEventListener('DOMContentLoaded', async e => {
     const expensesObj = await getPageExpenses(1);
+    let lastPage = expensesObj.lastPage;
     expensesObj.expenses.forEach(exp => displayExpense(exp));
     {
-        const currentPageBtn = createPageButton()
-        pgNumDiv.append(currentPageBtn);
+        pgNumDiv.append(createPageButton());
     }
     if (expensesObj.hasNext) {
-        const nxtPageBtn = createPageButton(expensesObj.currentPage + 1)
-        pgNumDiv.append(nxtPageBtn);
+        pgNumDiv.append(createPageButton(expensesObj.currentPage + 1));
     }
+    pgNumDiv.append(createPageButton(lastPage));
 
     pgNumDiv.addEventListener('click', async e => {
         if (e.target.tagName === 'BUTTON') {
             pgNumDiv.replaceChildren('');
             const currentPageNum = parseInt(e.target.innerText);
             const expensesObj = await getPageExpenses(currentPageNum);
+            let lastPage = expensesObj.lastPage;            
             if (expensesObj.hasPrevious) {
                 const prevPgBtn = createPageButton(currentPageNum - 1)
                 pgNumDiv.append(prevPgBtn);
@@ -64,6 +65,10 @@ document.addEventListener('DOMContentLoaded', async e => {
             if (expensesObj.hasNext) {
                 const nxtPageBtn = createPageButton(currentPageNum + 1)
                 pgNumDiv.append(nxtPageBtn);
+            }
+            if (currentPageNum + 1 < lastPage) {
+                console.log(currentPageNum + 1);
+                pgNumDiv.append(createPageButton(lastPage));
             }
         }
     })
