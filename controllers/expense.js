@@ -30,10 +30,12 @@ exports.addExpense = async (req, res) => {
 exports.getExpenses = async (req, res) => {
     try {
         const page = parseInt(req.query.page)||1;
+        const expPerPage = parseInt(req.query.expPerPg)||10;
+        //console.log('dfdsfsdfsdfs df sf sf:::::: ',expPerPage)
         const countExp = await Expense.count({where:{userId:req.user.id}});
-        const expenses = await UserServices.getExpenses(req, { offset: (page - 1) * 10, limit: 10 });
-        let numOfPages = parseInt(countExp / 10);
-        if (countExp % 10 != 0) numOfPages++;
+        const expenses = await UserServices.getExpenses(req, { offset: (page - 1) * expPerPage, limit: expPerPage });
+        let numOfPages = parseInt(countExp / expPerPage);
+        if (countExp % expPerPage != 0) numOfPages++;
         let expenseOp = {
             expenses: expenses,
             currentPage: page, 

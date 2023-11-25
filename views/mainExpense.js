@@ -37,7 +37,7 @@ myForm.addEventListener('submit', async e => {
 })
 
 document.addEventListener('DOMContentLoaded', async e => {
-    const expensesObj = await getPageExpenses(1);
+    const expensesObj = await getPageExpenses(1, parseInt(localStorage.getItem('expPerPage')));
     let lastPage = expensesObj.lastPage;
     expensesObj.expenses.forEach(exp => displayExpense(exp));
     {
@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', async e => {
         if (e.target.tagName === 'BUTTON') {
             pgNumDiv.replaceChildren('');
             const currentPageNum = parseInt(e.target.innerText);
-            const expensesObj = await getPageExpenses(currentPageNum);
+            const expensesObj = await getPageExpenses(currentPageNum, parseInt(localStorage.getItem('expPerPage')));
             lastPage = expensesObj.lastPage;
             if (expensesObj.hasPrevious) {
                 const prevPgBtn = createPageButton(currentPageNum - 1)
@@ -73,6 +73,15 @@ document.addEventListener('DOMContentLoaded', async e => {
             }
         }
     })
+
+    document.getElementById('expPrPg').addEventListener('change', async e => {
+        if (e.target.tagName == "SELECT") {
+            localStorage.setItem('expPerPage', e.target.value);
+
+        }
+    })
+
+
     if (isPremium === 'true') {
         const reports = await axios.get(`${backendApi}/premium/reports/`, { headers: { "Authorization": token } });
         (reports.data).forEach(report => {
@@ -152,13 +161,14 @@ document.addEventListener('DOMContentLoaded', async e => {
 
 })
 
-function createPageButton(pgNum, onClickCallback) {
+function createPageButton(pgNum) {
     const pageBtn = document.createElement('button');
     pgNum = pgNum || 1;
     pageBtn.innerText = `${pgNum}`
     pageBtn.onclick = async () => {
         expList.replaceChildren("");
-        const pageExpObj = await getPageExpenses(pgNum);
+        const pageExpObj = await getPageExpenses(pgNum, parseInt(localStorage.getItem('expPerPage')));
+        console.log(pageExpObj)
         pageExpObj.expenses.forEach(expense => displayExpense(expense));
     }
     return pageBtn;
@@ -170,8 +180,8 @@ function showAsPremiumUser(rzpBtnOne) {
     rzpBtnOne.replaceWith(prm);
 }
 
-async function getPageExpenses(page) {
-    const response = await axios.get(`${backendApi}/expense?page=${page}`, { headers: { "Authorization": token } });
+async function getPageExpenses(page, expPerPage) {
+    const response = await axios.get(`${backendApi}/expense?page=${page}&expPerPg=${parseInt(localStorage.getItem('expPerPage'))}`, { headers: { "Authorization": token } });
     const expensesObj = response.data;
     return expensesObj;
 
