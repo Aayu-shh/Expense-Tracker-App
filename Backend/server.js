@@ -1,6 +1,8 @@
 const bodyParser = require('body-parser');
+const fs = require('fs');
 const cors = require('cors');
 const express = require('express');
+const helmet = require('helmet');
 const path = require('path');
 const dotenv = require('dotenv').config();
 const db = require('./util/database');
@@ -14,14 +16,15 @@ const expenseRoutes = require('./routes/expense');
 const purchaseRoutes = require('./routes/purchase');
 const premiumRoutes = require('./routes/premium');
 const passwordRoutes = require('./routes/password');
-
+const morgan = require('morgan');
 const app = express();
 
+const accessLogStream = fs.createWriteStream(path.join(__dirname, 'access.log'),{flags:'a'});
 app.use(cors());
+app.use(helmet());
+app.use(morgan('combined',{stream:accessLogStream}));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-//app.use(express.static(path.join(__dirname, 'views')));
-//app.set('views','views');
 
 app.get('/', (req, res, next) => {
     //console.log('in Login Page middleware /');
