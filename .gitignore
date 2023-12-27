@@ -26,3 +26,9 @@ Backend/node_modules/on-headers/HISTORY.md
 Backend/node_modules/on-headers/index.js
 Backend/node_modules/on-headers/LICENSE
 Backend/node_modules/on-headers/README.md
+Backend/node_modules/basic-auth/package.json
+Backend/node_modules/basic-auth/node_modules/safe-buffer/package.json
+Backend/node_modules/helmet/package.json
+Backend/node_modules/morgan/package.json
+Backend/node_modules/morgan/node_modules/on-finished/package.json
+Backend/node_modules/on-headers/package.json
