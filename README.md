@@ -39,17 +39,17 @@ To unlock these premium features, and subscribe to a premium plan.
 2. Install dependencies with `npm install`.
 3. Set up the MySQL database and configure the connection.
 4. Create a .env file in main folder, with following attributes(these attributes are used in our code for multpile reasons including connection to DB, Payement Gateway and PORT):
-   a.TOKEN_SECRET
-   b.PORT
-   c.RZP_KEY_ID
-   d.RZP_KEY_SECRET
-   e.BREVO_API_KEY
-   f.IAM_USER_KEY
-   g.IAM_USER_SECRET
-   h.DB_PASS
-   i.DB_NAME
-   j.DB_USERNAME
-   k.DB_HOST
+   <br>a. TOKEN_SECRET
+   <br>b. PORT
+   <br>c. RZP_KEY_ID
+   <br>d. RZP_KEY_SECRET
+   <br>e. BREVO_API_KEY
+   <br>f. IAM_USER_KEY
+   <br>g. IAM_USER_SECRET
+   <br>h. DB_PASS
+   <br>i. DB_NAME
+   <br>j. DB_USERNAME
+   <br>k. DB_HOST
 6. Run the application with `npm start`.
 7. Access the app at `http://localhost:<process.env.PORT>`
 
