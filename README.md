@@ -1,6 +1,6 @@
 # Expense-Tracker-App
 
-This is a Fullstack Expense Tracker App that allows you to track your expenses and manage your finances.
+This is a Backend Expense Tracker App that allows you to track your expenses and manage your finances.
 
 ## Features
 - Add expenses with amount, description, and type.
@@ -38,8 +38,20 @@ To unlock these premium features, and subscribe to a premium plan.
 1. Clone the repository.
 2. Install dependencies with `npm install`.
 3. Set up the MySQL database and configure the connection.
-4. Run the application with `npm start`.
-5. Access the app at `http://localhost:2000`.
+4. Create a .env file in main folder, with following attributes(these attributes are used in our code for multpile reasons including connection to DB, Payement Gateway and PORT):
+   a.TOKEN_SECRET
+   b.PORT
+   c.RZP_KEY_ID
+   d.RZP_KEY_SECRET
+   e.BREVO_API_KEY
+   f.IAM_USER_KEY
+   g.IAM_USER_SECRET
+   h.DB_PASS
+   i.DB_NAME
+   j.DB_USERNAME
+   k.DB_HOST
+6. Run the application with `npm start`.
+7. Access the app at `http://localhost:<process.env.PORT>`
 
 ## Contributing
 
